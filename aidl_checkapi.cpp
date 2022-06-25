@@ -22,7 +22,7 @@
 
 #include <android-base/result.h>
 #include <android-base/strings.h>
-#include <gtest/gtest.h>
+// #include <gtest/gtest.h>
 
 #include "aidl_dumpapi.h"
 #include "aidl_language.h"
@@ -41,26 +41,26 @@ using std::set;
 using std::string;
 using std::vector;
 
-static std::string Dump(const AidlDefinedType& type) {
-  string code;
-  CodeWriterPtr out = CodeWriter::ForString(&code);
-  DumpVisitor visitor(*out);
-  type.DispatchVisit(visitor);
-  out->Close();
-  return code;
-}
+// static std::string Dump(const AidlDefinedType& type) {
+//   string code;
+//   CodeWriterPtr out = CodeWriter::ForString(&code);
+//   DumpVisitor visitor(*out);
+//   type.DispatchVisit(visitor);
+//   out->Close();
+//   return code;
+// }
 
 // Uses each type's Dump() and GTest utility(EqHelper).
-static bool CheckEquality(const AidlDefinedType& older, const AidlDefinedType& newer) {
-  using testing::internal::EqHelper;
-  auto older_file = older.GetLocation().GetFile();
-  auto newer_file = newer.GetLocation().GetFile();
-  auto result = EqHelper::Compare(older_file.data(), newer_file.data(), Dump(older), Dump(newer));
-  if (!result) {
-    AIDL_ERROR(newer) << result.failure_message();
-  }
-  return result;
-}
+// static bool CheckEquality(const AidlDefinedType& older, const AidlDefinedType& newer) {
+//   using testing::internal::EqHelper;
+//   auto older_file = older.GetLocation().GetFile();
+//   auto newer_file = newer.GetLocation().GetFile();
+//   auto result = EqHelper::Compare(older_file.data(), newer_file.data(), Dump(older), Dump(newer));
+//   if (!result) {
+//     AIDL_ERROR(newer) << result.failure_message();
+//   }
+//   return result;
+// }
 
 static vector<string> get_strict_annotations(const AidlAnnotatable& node) {
   // This must be symmetrical (if you can add something, you must be able to
@@ -476,10 +476,12 @@ bool check_api(const Options& options, const IoDelegate& io_delegate) {
     const auto new_type = found->second;
 
     if (level == Options::CheckApiLevel::EQUAL) {
-      if (!CheckEquality(*old_type, *new_type)) {
-        compatible = false;
-      }
-      continue;
+      // if (!CheckEquality(*old_type, *new_type)) {
+      //   compatible = false;
+      // }
+      // continue;
+      std::cerr << "Options::CheckApiLevel::EQUAL not supported";
+      abort();
     }
 
     if (!have_compatible_annotations(*old_type, *new_type)) {
